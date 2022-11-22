@@ -1,24 +1,18 @@
-() => {
+import React from 'react';
+import { Card, Heading, Paragraph } from '@contentful/f36-components';
+import { FieldExtensionSDK } from '@contentful/app-sdk';
+import { /* useCMA, */ useSDK } from '@contentful/react-apps-toolkit';
+import { CombinedLinkActions, MultipleEntryReferenceEditor } from '@contentful/field-editor-reference';
+
+const Field = () => {
   const isInitiallyDisabled = !!window.localStorage.getItem('initialDisabled')
-  const instanceParams = window.localStorage.getItem('instanceParams')
+  const instanceParams = JSON.parse(window.localStorage.getItem('instanceParams') || '')
   const [sdk, mitt] = newReferenceEditorFakeSdk()
   return (
-    <div data-test-id="multiple-references-editor-custom-cards-integration-test">
+    <div>
       <MultipleEntryReferenceEditor
-        renderCustomCard={props =>
-          props.entity.fields.exField ? (
-            <Card testId="custom-card">
-              <Heading>{props.entity.fields.exField.en}</Heading>
-              <Paragraph>{props.entity.fields.exDesc.en}</Paragraph>
-              <Button onClick={props.onEdit} style={{ marginRight: '10px' }}>
-                Edit
-              </Button>
-              <Button onClick={props.onRemove}>Remove</Button>
-            </Card>
-          ) : (
-            false
-          )
-        }
+        hasCardEditActions={true}
+        renderCustomActions={props => <CombinedLinkActions {...props} />}
         viewType="link"
         sdk={sdk}
         isInitiallyDisabled={isInitiallyDisabled}
@@ -33,3 +27,5 @@
     </div>
   )
 }
+
+export default Field;
